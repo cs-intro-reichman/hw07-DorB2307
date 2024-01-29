@@ -19,20 +19,20 @@ public class SpellChecker {
 
 	public static int levenshtein(String word1, String word2) {
 		word1 = word1.toLowerCase(); word2 = word2.toLowerCase();
-		int lenA = word1.length();
-        int lenB = word2.length();
-        if (lenA == 0) {
-            return lenB;
+		int len1 = word1.length();
+        int len2 = word2.length();
+        if (len1 == 0) {
+            return len2;
         }
-        if (lenB == 0) {
-            return lenA;
+        if (len1 == 0) {
+            return len2;
         }
         int cost = 0;
 		if (word1.charAt(0) != word2.charAt(0)) cost = 1;
-        int deletion = levenshtein(word1.substring(1), word2) + 1;
-        int insertion = levenshtein(word1, word2.substring(1)) + 1;
-        int substitution = levenshtein(word1.substring(1), word2.substring(1)) + cost;
-        return Math.min(Math.min(deletion, insertion), substitution);
+        int delete = levenshtein(word1.substring(1), word2) + 1;
+        int insert = levenshtein(word1, word2.substring(1)) + 1;
+        int substitute = levenshtein(word1.substring(1), word2.substring(1)) + cost;
+        return Math.min(Math.min(delete, insert), substitute);
 	}
 
 	public static String[] readDictionary(String fileName) {
