@@ -6,9 +6,9 @@ public class SpellChecker {
 		String word = args[0];
 		int threshold = Integer.parseInt(args[1]);
 		String[] dictionary = readDictionary("dictionary.txt");
-		//System.out.println(levenshtein(word, "largely"));
-		String correction = spellChecker(word, threshold, dictionary);
-		System.out.println(correction);
+		System.out.println(levenshtein(word, "category"));
+		//String correction = spellChecker(word, threshold, dictionary);
+		//System.out.println(correction);
 	}
 
 	public static String tail(String str) {
@@ -20,11 +20,11 @@ public class SpellChecker {
 		int count = 0, length1 = word1.length(), length2 = word2.length();
 		if (length1 > length2) {
 			count = length1 - length2; 
-			return count + levenshtein(tail(word1.substring(count)), tail(word2));
+			return count + levenshtein(word1.substring(0, length2), word2);
 		}
 		if (length2 > length1) {
 			count = length2 - length1; 
-			return count + levenshtein(tail(word2.substring(count)), tail(word1));
+			return count + levenshtein(word2.substring(0, length1), word1);
 		}
 		if (word1 == "" && word2 == "") return count;
 		word1 = word1.toLowerCase(); word2 = word2.toLowerCase();
