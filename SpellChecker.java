@@ -1,3 +1,4 @@
+import javax.print.DocFlavor.STRING;
 
 public class SpellChecker {
 
@@ -6,7 +7,7 @@ public class SpellChecker {
 		String word = args[0];
 		int threshold = Integer.parseInt(args[1]);
 		String[] dictionary = readDictionary("dictionary.txt");
-		//System.out.println(levenshtein(word, "category"));
+		//System.out.println(levenshtein(word, "woman"));
 		String correction = spellChecker(word, threshold, dictionary);
 		System.out.println(correction);
 	}
@@ -17,20 +18,21 @@ public class SpellChecker {
 	}
 
 	public static int levenshtein(String word1, String word2) {
-		int count = 0, length1 = word1.length(), length2 = word2.length();
-		if (length1 > length2) {
-			count = length1 - length2; 
-			return count + levenshtein(word1.substring(0, length2), word2);
-		}
-		if (length2 > length1) {
-			count = length2 - length1; 
-			return count + levenshtein(word2.substring(0, length1), word1);
-		}
-		if (word1 == "" && word2 == "") return count;
 		word1 = word1.toLowerCase(); word2 = word2.toLowerCase();
-		if (word1.charAt(0) != word2.charAt(0)) 
-			return 1 + levenshtein(tail(word1), tail(word2));
-		else return levenshtein(tail(word1), tail(word2));
+		int lenA = word1.length();
+        int lenB = word2.length();
+        if (lenA == 0) {
+            return lenB;
+        }
+        if (lenB == 0) {
+            return lenA;
+        }
+        int cost = 0;
+		if (word1.charAt(0) != word2.charAt(0)) cost = 1;
+        int deletion = levenshtein(word1.substring(1), word2) + 1;
+        int insertion = levenshtein(word1, word2.substring(1)) + 1;
+        int substitution = levenshtein(word1.substring(1), word2.substring(1)) + cost;
+        return Math.min(Math.min(deletion, insertion), substitution);
 	}
 
 	public static String[] readDictionary(String fileName) {
@@ -43,7 +45,7 @@ public class SpellChecker {
 	}
 
 	public static String spellChecker(String word, int threshold, String[] dictionary) {
-		int min = threshold, lev = 0;
+		int min = threshold + 1, lev = 0;
 		String closeString = "";
 		for (int i = 0; i < dictionary.length; i++) {
 			lev = levenshtein(word, dictionary[i]);
